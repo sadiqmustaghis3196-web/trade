@@ -1,7 +1,7 @@
 FROM node:20.19.0-bullseye-slim
 
 RUN apt-get update && \
-    apt-get install -y curl openssl ca-certificates git python build-essential && \
+    apt-get install -y curl openssl ca-certificates git python build-essential dos2unix && \
     rm -rf /var/lib/apt/lists/* && \
     npm install --unsafe-perm=true pm2@5.2.0 sequelize-cli@6.5.1 mocha -g --loglevel=error
 
@@ -12,6 +12,8 @@ WORKDIR /app
 
 # Copy the server files from the current directory (server/ in Railway context)
 COPY . /app
+
+RUN dos2unix ./entrypoint.sh && chmod +x ./entrypoint.sh
 
 # Changing the default image user to 'appuser'
 RUN groupadd -g 999 appuser && \
